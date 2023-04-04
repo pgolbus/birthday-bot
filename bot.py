@@ -12,6 +12,7 @@ import humanize
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+LOG_PATH = os.getenv('LOG_PATH')
 
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
@@ -22,7 +23,7 @@ GENERAL_ID = 1092880161659158542
 
 def init_logger():
     logger.setLevel(logging.INFO)
-    fileHandler = logging.FileHandler(filename='logs/discord.log', encoding='utf-8', mode='a')
+    fileHandler = logging.FileHandler(filename=f'{LOG_PATH}/discord.log', encoding='utf-8', mode='a')
     fileHandler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
     streamHandler = logging.StreamHandler()
     streamHandler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
@@ -32,7 +33,6 @@ def init_logger():
 @client.event
 async def on_ready():
     logger.info('connected')
-    logger.info('%s' % str(client.birthdays))
 
 @client.event
 async def on_member_join(member):
