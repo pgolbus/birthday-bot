@@ -17,7 +17,7 @@ intents = discord.Intents.all()
 client = discord.Client(intents=intents)
 logger = logging.getLogger('discord')
 
-GENERAL_ID = 1006376112571547722
+GENERAL_ID = 1092880161659158542
 
 
 def init_logger():
