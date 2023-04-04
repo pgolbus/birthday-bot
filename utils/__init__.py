@@ -3,8 +3,6 @@ import dataclasses
 import json
 import logging
 
-# Look at all of these beautiful docstrings! Guess who didn't eat their TDD Wheaties!
-
 
 logger = logging.getLogger('discord')
 
