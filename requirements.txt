@@ -1,0 +1,3 @@
+aiocron==1.8
+discord==1.7.3
+humanize==4.3.0
