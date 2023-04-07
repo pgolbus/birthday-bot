@@ -1,8 +1,6 @@
 name: "Run tests on push"
 
-on: 
-  push:
-  workflow-dispatch:
+on: [push, workflow_dispatch]
 
 jobs:
   build:
