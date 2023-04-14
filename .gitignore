@@ -130,3 +130,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Set up your damn emacs
+*~
+
+discord_bot_token
