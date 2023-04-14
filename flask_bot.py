@@ -8,6 +8,9 @@ import discord
 from dotenv import load_dotenv
 import humanize
 
+from flask import Flask, redirect, url_for
+from flask_discord import DiscordOAuth2Session, requires_authorization, Unauthorized
+
 
 # Look at all of these beautiful docstrings! Guess who didn't eat their TDD Wheaties!
 
@@ -23,6 +26,16 @@ client = discord.Client(intents=intents)
 GENERAL_ID = 1092880161659158542
 DATE_REGEX = re.compile("(\d{1,2}\/\d{1,2}\/\d{4})")
 
+app = Flask(__name__)
+app.secret_key = os.getenv("APP_SECRET_KEY")
+#os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "true"      # !! Only in development environment.
+app.config["DISCORD_CLIENT_ID"] = os.getenv("DISCORD_CLIENT_ID")
+app.config["DISCORD_CLIENT_SECRET"] = os.getenv("DISCORD_CLIENT_SECRET")
+app.config["DISCORD_BOT_TOKEN"] = os.getenv("DISCORD_BOT_TOKEN")
+app.config["DISCORD_REDIRECT_URI"] = os.getenv("GOLBUS_ROOT_URL")
+
+
+discord = DiscordOAuth2Session(app)
 
 def init_logger():
     logger.setLevel(logging.INFO)
@@ -103,4 +116,4 @@ def date_message(birthday):
 
 if __name__ == "__main__":
     init_logger()
-    client.run(DISCORD_BOT_TOKEN)
+    discord.init_app(app)
