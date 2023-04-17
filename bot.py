@@ -5,15 +5,12 @@ import os
 import re
 
 import discord
-from dotenv import load_dotenv
 import humanize
 
 
 # Look at all of these beautiful docstrings! Guess who didn't eat their TDD Wheaties!
 
-load_dotenv()
-DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
-LOG_PATH = os.getenv("LOG_PATH")
+DISCORD_BOT_TOKEN = "MTA5Mjg4MjYxMDAwODY0MTUzNg.G3Fnsj.evssnQpqRUrXUHBm22vSVHu9enpKT0jn_qNIIM"
 
 logger = logging.getLogger("discord")
 
@@ -27,7 +24,7 @@ DATE_REGEX = re.compile("(\d{1,2}\/\d{1,2}\/\d{4})")
 def init_logger():
     logger.setLevel(logging.INFO)
     fileHandler = logging.FileHandler(
-        filename=f"{LOG_PATH}/discord.log", encoding="utf-8", mode="a"
+        filename=f"discord.log", encoding="utf-8", mode="a"
     )
     fileHandler.setFormatter(
         logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s")
