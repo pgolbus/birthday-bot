@@ -1,0 +1,25 @@
+name: "Deploy to docker hub"
+
+on: workflow_dispatch
+
+jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml
+
+  deploy:
+    name: deploy
+    needs: [tests]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:     
+          python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.lock
+      - name: Lint
+        run: black --check .
+      - name: Unit tests
+        run: pytest . 
