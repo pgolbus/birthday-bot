@@ -48,7 +48,7 @@ async def on_member_join(member):
     channel = client.get_channel(GENERAL_ID)
     msg = [f"{member.mention}, welcome to the CS411 Birthday discord server."]
     msg.append(
-        "If you @ me your birthday "@birthday-bot MM/DD/YYYY", I will tell you how many days you\'ve been alive."
+        'If you @ me your birthday "@birthday-bot MM/DD/YYYY", I will tell you how many days you\'ve been alive.'
     )
     msg.append("I hope something good happens to you today!")
     msg = "\n".join(msg)
