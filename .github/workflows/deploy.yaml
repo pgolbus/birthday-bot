@@ -28,4 +28,4 @@ jobs:
       - name: build
         run: docker build . --file Dockerfile --tag pgolbus2/cs411-birthday-bot:${{ env.RELEASE_VERSION }}
       - name: push
-        run: docker push ${{secrets.DOCKER_USERNAME}}/cs411-birthday-bot
+        run: docker push ${{secrets.DOCKER_USERNAME}}/cs411-birthday-bot:${{ env.RELEASE_VERSION }}
