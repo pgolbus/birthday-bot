@@ -10,7 +10,7 @@ import humanize
 
 # Look at all of these beautiful docstrings! Guess who didn't eat their TDD Wheaties!
 
-DISCORD_BOT_TOKEN = "MTA5Mjg4MjYxMDAwODY0MTUzNg.G3Fnsj.evssnQpqRUrXUHBm22vSVHu9enpKT0jn_qNIIM"
+DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 
 logger = logging.getLogger("discord")
 
@@ -24,7 +24,7 @@ DATE_REGEX = re.compile("(\d{1,2}\/\d{1,2}\/\d{4})")
 def init_logger():
     logger.setLevel(logging.INFO)
     fileHandler = logging.FileHandler(
-        filename=f"discord.log", encoding="utf-8", mode="a"
+        filename=f"./discord.log", encoding="utf-8", mode="a"
     )
     fileHandler.setFormatter(
         logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s")
@@ -100,4 +100,5 @@ def date_message(birthday):
 
 if __name__ == "__main__":
     init_logger()
+    logger.info("%s" % DISCORD_BOT_TOKEN)
     client.run(DISCORD_BOT_TOKEN)
