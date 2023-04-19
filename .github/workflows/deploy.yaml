@@ -1,11 +1,14 @@
-name: "Run tests on push"
+name: "Deploy to docker hub"
 
-on: push
+on: workflow_dispatch
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  tests:
+    uses: ./.github/workflows/tests.yml
 
+  deploy:
+    name: deploy
+    needs: [tests]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
