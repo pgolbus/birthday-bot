@@ -1,7 +1,7 @@
 name: "Deploy to docker hub"
 
 on: 
-  workflow_dispatch:
+
   push:
     tags:
       - 'v*.*.*'
@@ -17,9 +17,11 @@ jobs:
     needs: [tests]
     steps:
       - uses: actions/checkout@v2
-      - name: Set env
+      - name: login
+        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+      - name: get version number
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-      - name: Test
-        run: |
-          echo $RELEASE_VERSION
-          echo ${{ env.RELEASE_VERSION }}
+      - name: build
+        run: docker build . --file Dockerfile --tag pgolbus2/cs411-birthday-bot:${{ env.RELEASE_VERSION }}
+      - name: push
+        run: docker push ${{secrets.DOCKER_USERNAME}}/cs411-birthday-bot
