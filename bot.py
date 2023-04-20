@@ -100,5 +100,4 @@ def date_message(birthday):
 
 if __name__ == "__main__":
     init_logger()
-    logger.info("%s" % DISCORD_BOT_TOKEN)
     client.run(DISCORD_BOT_TOKEN)
