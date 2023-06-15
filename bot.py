@@ -8,6 +8,9 @@ import discord
 import humanize
 
 
+
+
+
 # Look at all of these beautiful docstrings! Guess who didn't eat their TDD Wheaties!
 
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
