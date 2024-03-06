@@ -47,7 +47,7 @@ jobs:
           name: version-file
       - name: Read version from file
         run: |
-          export RELEASE_VERSION=$(cat version.txt)
+          RELEASE_VERSION=$(cat version.txt)
           echo "RELEASE_VERSION: $RELEASE_VERSION"
       - name: build
         run: |
