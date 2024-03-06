@@ -51,26 +51,25 @@ jobs:
       - name: push
         run: docker push ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:$(cat version.txt)
 
-  deploy:
-    name: deploy
-    needs: push
-    runs-on: ubuntu-latest
+steps:
+  - name: Download version file
+    uses: actions/download-artifact@v2
+    with:
+      name: version-file
 
-    steps:
-      - name: Download version file
-        uses: actions/download-artifact@v2
-        with:
-          name: version-file
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+  - name: Setup SSH
+    uses: webfactory/ssh-agent@v0.5.3
+    with:
+      ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Deploy to server
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
-            docker pull ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:$(cat version.txt)
-            docker stop birthday-bot || true
-            docker rm birthday-bot || true
-            docker run -d --name birthday-bot ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:$(cat version.txt)
-          EOF
+  - name: Read version from file
+    run: RELEASE_VERSION=$(cat version.txt)
+
+  - name: Deploy to server
+    run: |
+      ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+        docker pull ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:${RELEASE_VERSION}
+        docker stop birthday-bot || true
+        docker rm birthday-bot || true
+        docker run -d --name birthday-bot ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:${RELEASE_VERSION}
+      EOF
