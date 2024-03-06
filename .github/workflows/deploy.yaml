@@ -50,9 +50,9 @@ jobs:
           RELEASE_VERSION=$(cat version.txt)
           echo "RELEASE_VERSION: $RELEASE_VERSION"
       - name: build
-        run: docker build . --file Dockerfile --tag pgolbus2/cs411-birthday-bot:${{ env.RELEASE_VERSION }}
+        run: docker build . --file Dockerfile --tag pgolbus2/cs411-birthday-bot:$RELEASE_VERSION
       - name: push
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:${{ env.RELEASE_VERSION }}
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:$env.RELEASE_VERSION
 
   deploy:
     name: deploy
@@ -77,8 +77,8 @@ jobs:
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
-            docker pull ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:${{ env.RELEASE_VERSION }}
+            docker pull ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:$env.RELEASE_VERSION
             docker stop birthday-bot || true
             docker rm birthday-bot || true
-            docker run -d --name birthday-bot ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:${{ env.RELEASE_VERSION }}
+            docker run -d --name birthday-bot ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:$RELEASE_VERSION
           EOF
