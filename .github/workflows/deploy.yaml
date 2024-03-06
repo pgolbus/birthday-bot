@@ -1,9 +1,9 @@
 name: "Build and restart bot"
 
-on:
-  push:
-    tags:
-      - 'v*.*.*'
+on: push
+#  push:
+#    tags:
+#      - 'v*.*.*'
 
 jobs:
   tests:
@@ -45,16 +45,11 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: version-file
-      - name: Read version from file
-        run: |
-          RELEASE_VERSION=$(cat version.txt)
-          echo "RELEASE_VERSION: $RELEASE_VERSION"
       - name: build
         run: |
-          echo "RELEASE_VERSION: $RELEASE_VERSION"
-          docker build . --file Dockerfile --tag pgolbus2/cs411-birthday-bot:$RELEASE_VERSION
+          docker build . --file Dockerfile --tag pgolbus2/cs411-birthday-bot:(cat version.txt)
       - name: push
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:$RELEASE_VERSION
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:(cat version.txt)
 
   deploy:
     name: deploy
@@ -66,11 +61,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: version-file
-      - name: Read version from file
-        run: |
-          export ELEASE_VERSION=$(cat version.txt)
-          echo "RELEASE_VERSION: $RELEASE_VERSION"
-
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
@@ -79,8 +69,8 @@ jobs:
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
-            docker pull ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:$RELEASE_VERSION
+            docker pull ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:(cat version.txt)
             docker stop birthday-bot || true
             docker rm birthday-bot || true
-            docker run -d --name birthday-bot ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:$RELEASE_VERSION
+            docker run -d --name birthday-bot ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:(cat version.txt)
           EOF
