@@ -10,9 +10,26 @@ jobs:
     name: tests
     uses: ./.github/workflows/tests.yaml
 
+  version:
+    name: version
+    needs: tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: get version number
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Upload environment variable file
+        uses: actions/upload-artifact@v2
+        with:
+          name: env-file
+          path: $GITHUB_ENV
+
+
   push:
     name: push
-    needs: tests
+    needs: version
     runs-on: ubuntu-latest
 
     steps:
@@ -25,8 +42,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: get version number
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Download environment variable file
+        uses: actions/download-artifact@v2
+        with:
+          name: env-file
       - name: build
         run: docker build . --file Dockerfile --tag pgolbus2/cs411-birthday-bot:${{ env.RELEASE_VERSION }}
       - name: push
@@ -38,6 +57,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Download environment variable file
+        uses: actions/download-artifact@v2
+        with:
+          name: env-file
+
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
