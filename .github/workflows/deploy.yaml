@@ -11,9 +11,10 @@ jobs:
     uses: ./.github/workflows/tests.yaml
 
   push:
-    runs-on: ubuntu-latest
     name: push
     needs: tests
+    runs-on: ubuntu-latest
+    container: python:3.10.12
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -33,6 +34,7 @@ jobs:
     name: deploy
     needs: push
     runs-on: ubuntu-latest
+    container: python:3.10.12
     steps:
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.3
