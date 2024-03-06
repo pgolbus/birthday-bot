@@ -47,9 +47,9 @@ jobs:
           name: version-file
       - name: build
         run: |
-          docker build . --file Dockerfile --tag pgolbus2/cs411-birthday-bot:(cat version.txt)
+          docker build . --file Dockerfile --tag pgolbus2/cs411-birthday-bot:$(cat version.txt)
       - name: push
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:(cat version.txt)
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:$(cat version.txt)
 
   deploy:
     name: deploy
@@ -69,8 +69,8 @@ jobs:
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
-            docker pull ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:(cat version.txt)
+            docker pull ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:$(cat version.txt)
             docker stop birthday-bot || true
             docker rm birthday-bot || true
-            docker run -d --name birthday-bot ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:(cat version.txt)
+            docker run -d --name birthday-bot ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:$(cat version.txt)
           EOF
