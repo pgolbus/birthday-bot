@@ -50,7 +50,9 @@ jobs:
           export RELEASE_VERSION=$(cat version.txt)
           echo "RELEASE_VERSION: $RELEASE_VERSION"
       - name: build
-        run: docker build . --file Dockerfile --tag pgolbus2/cs411-birthday-bot:$RELEASE_VERSION
+        run: |
+          echo "RELEASE_VERSION: $RELEASE_VERSION"
+          docker build . --file Dockerfile --tag pgolbus2/cs411-birthday-bot:$RELEASE_VERSION
       - name: push
         run: docker push ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:$RELEASE_VERSION
 
