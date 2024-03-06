@@ -8,11 +8,8 @@ jobs:
     container: python:3.8
 
     steps:
+      - name: Checkout code
       - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
 
       - name: Upgrade pip and Install dependencies
         run: |
