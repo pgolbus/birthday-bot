@@ -50,8 +50,8 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}"
+            echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }} --password-stdin"
             docker pull pgolbus2/cs411-birthday-bot:${{ env.VERSION_NUMBER }}
             docker stop birthday-bot || true
             docker rm birthday-bot || true
-            docker run -d --name birthday-bot pgolbus2/cs411-birthday-bot:${{ env.VERSION_NUMBER }}
+            docker run -d --name birthday-bot --env "DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }}" --rm -it pgolbus2/cs411-birthday-bot:${{ env.VERSION_NUMBER }}
