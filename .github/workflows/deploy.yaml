@@ -31,9 +31,7 @@ jobs:
 
     steps:
       - name: debug
-        run: |
-          echo ${{ github.event.env.VERSION_NUMBER }}
-          echo ${{ env.VERSION_NUMBER }}
+        run: echo ${{ github.event.ref }}
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.3
         with:
