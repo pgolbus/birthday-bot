@@ -10,20 +10,15 @@ jobs:
   #   name: tests
   #   uses: ./.github/workflows/tests.yaml
 
-  version:
-    name: version
-    # needs: tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
-      - name: get version number
-        run: echo "${GITHUB_REF#refs/*/}" > version.txt
-      - name: Upload version file as artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: version-file
-          path: version.txt
+version:
+  name: version
+  # needs: tests
+  runs-on: ubuntu-latest
+  steps:
+    - name: checkout
+      uses: actions/checkout@v3
+    - name: Set GitHub environment variable
+      run: echo "::set-env name=VERSION_NUMBER::${GITHUB_REF#refs/*/}"
 
 
   # push:
@@ -69,7 +64,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:$(cat version.txt)
+            docker pull ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:${{ env.VERSION_NUMBER }}
             docker stop birthday-bot || true
             docker rm birthday-bot || true
-            docker run -d --name birthday-bot ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:$(cat version.txt)
+            docker run -d --name birthday-bot ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:${{ env.VERSION_NUMBER }}
