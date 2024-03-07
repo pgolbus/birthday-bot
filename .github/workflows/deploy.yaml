@@ -12,7 +12,7 @@ jobs:
 
   push:
     name: push
-    needs: test
+    needs: tests
     runs-on: ubuntu-latest
 
     steps:
