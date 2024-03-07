@@ -10,15 +10,15 @@ jobs:
   #   name: tests
   #   uses: ./.github/workflows/tests.yaml
 
-version:
-  name: version
-  # needs: tests
-  runs-on: ubuntu-latest
-  steps:
-    - name: checkout
-      uses: actions/checkout@v3
-    - name: Set GitHub environment variable
-      run: echo "::set-env name=VERSION_NUMBER::${GITHUB_REF#refs/*/}"
+  version:
+    name: version
+    # needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: Set GitHub environment variable
+        run: echo "::set-env name=VERSION_NUMBER::${GITHUB_REF#refs/*/}"
 
 
   # push:
