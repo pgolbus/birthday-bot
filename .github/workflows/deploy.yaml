@@ -66,12 +66,10 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Read version from file
-        run: RELEASE_VERSION=$(cat version.txt)
-
+          
       - name: Deploy to server
         run: |
+          RELEASE_VERSION=$(cat version.txt)
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << "EOF"
             docker pull ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:${RELEASE_VERSION}
             docker stop birthday-bot || true
