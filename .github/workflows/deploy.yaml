@@ -28,7 +28,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: set github envirnment variable
-        run: echo "VERSION_NUMBER=${GITHUB_REF#refs/*/}"
+        run: export VERSION_NUMBER=${GITHUB_REF#refs/*/}
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -39,7 +39,7 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:${{ env.VERSION_NUMBER }}
             docker stop birthday-bot || true
             docker rm birthday-bot || true
-            docker run -d --name birthday-bot "${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:{{ env.VERSION_NUMBER }}
+            docker run -d --name birthday-bot ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:{{ env.VERSION_NUMBER }}
 
 
   # push:
