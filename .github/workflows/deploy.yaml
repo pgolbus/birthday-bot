@@ -28,7 +28,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: set github envirnment variable
-        run: export "VERSION_NUMBER=${GITHUB_REF#refs/*/}"
+        run: echo "VERSION_NUMBER=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.3
         with:
