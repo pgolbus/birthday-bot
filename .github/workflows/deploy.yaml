@@ -36,10 +36,10 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker pull "${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:$VERSION_NUMBER"
+            docker pull ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:${{ env.VERSION_NUMBER }}
             docker stop birthday-bot || true
             docker rm birthday-bot || true
-            docker run -d --name birthday-bot "${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:$VERSION_NUMBER"
+            docker run -d --name birthday-bot "${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:{{ env.VERSION_NUMBER }}
 
 
   # push:
