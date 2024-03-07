@@ -10,34 +10,36 @@ jobs:
   #   name: tests
   #   uses: ./.github/workflows/tests.yaml
 
-  version:
-    name: version
-    # needs: tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
-      - name: Set GitHub environment variable
-        run: echo "VERSION_NUMBER=${GITHUB_REF#refs/*/}" | tee -a $GITHUB_ENV $GITHUB_OUTPUT
+  # version:
+  #   name: version
+  #   # needs: tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: checkout
+  #       uses: actions/checkout@v3
+  #     - name: Set GitHub environment variable
+  #       run: echo "VERSION_NUMBER=${GITHUB_REF#refs/*/}" | tee -a $GITHUB_ENV $GITHUB_OUTPUT
   deploy:
     name: deploy
     # needs: version #push
     runs-on: ubuntu-latest
 
     steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        name: set github envirnment variable
+        run: echo "VERSION_NUMBER=${GITHUB_REF#refs/*/}"
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.3
-        env: 
-          VERSION_NUMBER: ${{ needs.version.outputs.VERSION_NUMBER }}
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker pull "${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:${GITHUB_REF#refs/*/}"
+            docker pull "${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:$VERSION_NUMBER"
             docker stop birthday-bot || true
             docker rm birthday-bot || true
-            docker run -d --name birthday-bot ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:${{ GITHUB_REF#refs/*/ }}
+            docker run -d --name birthday-bot "${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:$VERSION_NUMBER"
 
 
   # push:
