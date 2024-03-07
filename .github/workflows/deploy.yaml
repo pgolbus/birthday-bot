@@ -29,7 +29,9 @@ jobs:
       - name: debug
         env: 
           VERSION_NUMBER: ${{ needs.version.outputs.VERSION_NUMBER }}
-        run: echo ${{ env.VERSION_NUMBER }}
+        run: |
+          echo ${{ env.VERSION_NUMBER }}
+          echo $VERSION_NUMBER
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.3
         env: 
