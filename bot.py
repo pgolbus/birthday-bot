@@ -74,13 +74,14 @@ async def on_message(message):
             await message.channel.send(response)
         except TypeError:
             await message.channel.send(
-                " ".join(
-                    [
-                        "I hope something good happens to you today.",
-                        'If you tell me your birthday "@cs411-birthday-bot MM/DD/YYYY",',
-                        "I'll tell you how many days you've been alive.",
-                    ]
-                )
+                "Fuck yeah dude!"
+                # " ".join(
+                #     [
+                #         "I hope something good happens to you today.",
+                #         'If you tell me your birthday "@cs411-birthday-bot MM/DD/YYYY",',
+                #         "I'll tell you how many days you've been alive.",
+                #     ]
+                # )
             )
 
 
