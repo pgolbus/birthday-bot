@@ -50,7 +50,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-	          docker login
+            docker login
             docker pull pgolbus2/cs411-birthday-bot:${{ env.VERSION_NUMBER }}
             docker stop birthday-bot || true
             docker rm birthday-bot || true
