@@ -54,3 +54,4 @@ jobs:
             docker pull pgolbus2/cs411-birthday-bot:${{ env.VERSION_NUMBER }}
             docker stop birthday-bot || true
             docker rm birthday-bot || true
+            docker run -d --name birthday-bot --env "DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }}" --rm -it pgolbus2/cs411-birthday-bot:${{ env.VERSION_NUMBER }}
