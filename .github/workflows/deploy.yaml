@@ -23,9 +23,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            screen -r -d birthday-bot
-            PID=$!
-            kill $PID
+            pkill bot.py
             rm -rf .venvs/birthday-bot/
             python -m venv .venvs/birthday-bot
             source .venvs/birthday-bot/bin/activate
@@ -35,4 +33,7 @@ jobs:
             git rebase main
             pip install -U pip
             pip install -r requirements.lock
+            screen -r -d birthday-bot
+            deactivate
+            source ~/.venvs/birthday-bot/bin/activate
             python bot.py&
