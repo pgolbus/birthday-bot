@@ -10,48 +10,28 @@ jobs:
     name: tests
     uses: ./.github/workflows/tests.yaml
 
-  # push:
-  #   name: push
-  #   needs: tests
-  #   runs-on: ubuntu-latest
+  deploy:
+    name: deploy
+    needs: tests
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: checkout
-  #       uses: actions/checkout@v3
-  #     - name: set github envirnment variable
-  #       run: echo "VERSION_NUMBER=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-  #     - name: setup docker
-  #       uses: docker/setup-buildx-action@v2
-  #     - name: login
-  #       uses: docker/login-action@v1
-  #       with:
-  #         username: ${{ secrets.DOCKER_USERNAME }}
-  #         password: ${{ secrets.DOCKER_PASSWORD }}
-  #     - name: build
-  #       run: |
-  #         docker build . --file Dockerfile --tag pgolbus2/cs411-birthday-bot:${{ env.VERSION_NUMBER }}
-  #     - name: push
-  #       run: docker push ${{ secrets.DOCKER_USERNAME }}/cs411-birthday-bot:${{ env.VERSION_NUMBER }}
-
-  # deploy:
-  #   name: deploy
-  #   needs: push
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #     - name: checkout
-  #       uses: actions/checkout@v3
-  #     - name: set github envirnment variable
-  #       run: echo "VERSION_NUMBER=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-  #     - name: Deploy to server
-  #       uses: appleboy/ssh-action@v1.0.3
-  #       with:
-  #         host: ${{ secrets.SERVER_HOST }}
-  #         username: ${{ secrets.SERVER_USER }}
-  #         key: ${{ secrets.SSH_PRIVATE_KEY }}
-  #         script: |
-  #           echo ${{ secrets.DOCKER_ACTUAL_PASSWORD }} | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-  #           docker pull pgolbus2/cs411-birthday-bot:${{ env.VERSION_NUMBER }}
-  #           docker stop birthday-bot || true
-  #           docker rm birthday-bot || true
-  #           docker run -d --name birthday-bot --env "DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }}" --rm -it pgolbus2/cs411-birthday-bot:${{ env.VERSION_NUMBER }}
+    steps:
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            PID=$!
+            kill $PID
+            rm -rf .venvs/birthday-bot/
+            python -m venv .venvs/birthday-bot
+            source .venvs/birthday-bot/bin/activate
+            cd birthday-bot
+            git pull
+            git checkout no_docker
+            git rebase main
+            pip install -U pip
+            pip install -r requirements.lock
+            python bot.py&
