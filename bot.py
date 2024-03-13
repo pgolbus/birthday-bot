@@ -5,11 +5,12 @@ import os
 import re
 
 import discord
+from dotenv import load_dotenv
 import humanize
 
 
 # Look at all of these beautiful docstrings! Guess who didn't eat their TDD Wheaties!
-
+load_dotenv()
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 
 logger = logging.getLogger("discord")
