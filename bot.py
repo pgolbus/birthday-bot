@@ -74,7 +74,8 @@ async def on_message(message):
             await message.channel.send(response)
         except TypeError:
             await message.channel.send(
-                "Hell yeah dude!"
+                # "Hell yeah dude!"
+                "Happy Birthday!"
                 # " ".join(
                 #     [
                 #         "I hope something good happens to you today.",
