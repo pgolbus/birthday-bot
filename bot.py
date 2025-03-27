@@ -21,6 +21,10 @@ GENERAL_ID = 1092880161659158542
 DATE_REGEX = re.compile("(\d{1,2}\/\d{1,2}\/\d{4})")
 
 
+
+
+# as;hddsakfh;dsaj
+
 def init_logger():
     logger.setLevel(logging.INFO)
     fileHandler = logging.FileHandler(
